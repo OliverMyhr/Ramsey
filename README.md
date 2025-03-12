@@ -1,0 +1,2 @@
+# Ramsey
+Innlevering anvendt programmering
