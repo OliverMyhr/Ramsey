@@ -1,0 +1,1 @@
+print("Hva skjer a?")
