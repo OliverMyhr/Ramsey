@@ -16,3 +16,4 @@ parameters = {"sources" : id_granaasen, "elements" : elements, "referencetime" :
 
 fil = requests.get(url, parameters, auth = (key, ""))
 data_fil = fil.json()
+
