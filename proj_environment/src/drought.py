@@ -18,5 +18,3 @@ with zip_file.open(csv_filename) as csv_file:
         
 print("CSV-fil lastet inn i pandas!")
 print(df.head()) 
-
-   
