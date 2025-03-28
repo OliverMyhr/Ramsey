@@ -2,6 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import pandasql as pdsql
 
 load_dotenv()
 
@@ -98,10 +99,7 @@ def clean(df):
 
 
 def analyze(df):
-    import pandasql as pdsql
-    
     if not isinstance(df, pd.DataFrame):
-
         return pd.DataFrame()
 
     source_mapping = {"SN68173" : "Gløshaugen", "SN90450" : "Tromsø", "SN68090" : "Granåsen", "SN18700" : "Blindern"}
