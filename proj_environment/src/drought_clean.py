@@ -3,6 +3,7 @@ import pandas as pd
 df = pd.read_csv("../data/filtered1_data.csv")
 min_temp = -50
 max_temp = 50
+fips_codes = [1001, 1003, 1005]
 
 def unrealistic_temp_T2M(df, min_temp, max_temp):
 
@@ -62,3 +63,44 @@ def check_unrealistic_temperature(df, min_temp, max_temp):
             print("Something went wrong:", e)
 
 check_unrealistic_temperature(df, min_temp, max_temp)
+
+def replace(df, fips_codes):
+
+    for fips in fips_codes:
+
+        fips_df = df[df["fips"] == fips]
+        mean_PS = fips_df["PS"].mean()
+        std_dev = fips_df["PS"].std()
+
+        min_PS = mean_PS - 2 * std_dev
+        max_PS = mean_PS + 2 * std_dev
+
+        df.loc[df["fips"] == fips, "PS"] = df.loc[df["fips"] == fips, "PS"].apply(lambda x: mean_PS if x < min_PS or x > max_PS else x)
+
+        return df
+
+def replace_to_csv(df, fips_codes):
+
+    while True:
+
+        try:
+
+            replacement = input("Do you want to replace the values in the dataset? (y/n): ")
+
+            if replacement.lower() == "y":
+
+                df = replace(df, fips_codes)
+                df["PS"] = df["PS"].round(2)
+                df.to_csv("../data/filtered1_data_cleaned.csv", index = False)
+
+                return f"New file created with replaced values."
+            
+            elif replacement.lower() == "n":
+
+                return f"No new file created."
+            
+            else:
+                print(f"Invalid input. Please enter 'y' or 'n'.")
+        
+        except Exception as e:
+            print("Something went wrong.", e)
