@@ -97,12 +97,6 @@ def clean(df):
     return df
 
 
-def format_element_spacing(df):
-    df["elementId"] = [elem.replace(" ", "_") for elem in df["elementId"]]
-
-    return df
-
-
 def analyze(df):
     import pandasql as pdsql
     
@@ -127,13 +121,13 @@ def analyze(df):
 
 def final_data():
     initial_df = to_df()
+    
     if initial_df.empty:
         print("Ingen data tilgjengelig.")
 
         return pd.DataFrame()
 
-    cleaned = clean(initial_df)
-    formatted = format_element_spacing(cleaned)  
-    final = analyze(formatted)
+    cleaned = clean(initial_df) 
+    final = analyze(cleaned)
 
     return final
