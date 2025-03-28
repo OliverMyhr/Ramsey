@@ -2,12 +2,6 @@ import json
 import os
 
 def save_to_json(data, filename):
-    """
-    Lagrer data til en JSON-fil.
-    
-    :param data: Dataen som skal lagres (må være serialiserbar til JSON)
-    :param filename: Filstien hvor JSON-filen skal lagres
-    """
     try:
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         
@@ -18,5 +12,3 @@ def save_to_json(data, filename):
 
     except Exception as e:
         print(f"Feil ved lagring av JSON-fil: {e}")
-
-
