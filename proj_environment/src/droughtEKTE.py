@@ -12,7 +12,7 @@ def download_zip(url):
 
 def open_zip(response):
     zip_file = zipfile.ZipFile(io.BytesIO(response.content))
-    print("Filer i ZIP:", zip_file.namelist())
+    print("Files in ZIP:", zip_file.namelist())
     return zip_file
 
 def get_csv_filename(zip_file):
@@ -25,7 +25,7 @@ def read_csv_from_zip(zip_file, csv_filename):
 
 def print_unique_fips(df):
     unique_fips = df['fips'].unique()
-    return f"Unike fips-koder: {unique_fips[:20]}"
+    return f"Unique fips-codes: {unique_fips[:20]}"
 
 def filter_data(df, selected_fips):
     filtered_df = df[df['fips'].isin(selected_fips)]
@@ -33,7 +33,7 @@ def filter_data(df, selected_fips):
 
 def save_filtered_data(filtered_df):
     filtered_df.to_csv('../data/filtered1_data.csv', index=False)
-    print(f"De første radene i det filtrerte datasettet: {filtered_df.head()}")
+    print(f"First rows in the filtered dataset: {filtered_df.head()}")
 
 def new_file():
     while True:
@@ -48,8 +48,7 @@ def new_file():
                 csv_filename = get_csv_filename(zip_file)
                 df = read_csv_from_zip(zip_file, csv_filename)
                 print_unique_fips(df)
-
-                selected_fips = [1001, 1003, 1005] 
+                selected_fips = [1001, 1003, 1005]
                 filtered_df = filter_data(df, selected_fips)
                 save_filtered_data(filtered_df)
 
