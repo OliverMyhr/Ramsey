@@ -104,3 +104,73 @@ def replace_to_csv(df, fips_codes):
         
         except Exception as e:
             print("Something went wrong.", e)
+
+def find_median(df, fips_codes):
+    
+    while True:
+
+        try:
+            
+            f_median = input("Do you wish to find the median values? (y/n): ")
+
+            if f_median.lower() == "y":
+                
+                columns_available = [col for col in df.columns if col not in ["fips", "date"]]
+                print(f"Columns available for median calculation: {columns_available}")
+                spec_cols = input("Do you wish to find the median for specific columns or all? (Write 1 for 'specific' or 2 for 'all': ")
+
+                map_lowercase = {col.lower(): col for col in columns_available}
+                
+                if spec_cols == "1":
+
+                    choose_column = input("Which column(s) would you like to find the median for? Write column(s) in this format: 'T2M T2M_MIN' etc. (without quotes): ")
+                    chosen_columns = choose_column.split()
+
+                    invalid_columns = [col for col in chosen_columns if col not in map_lowercase]
+
+                    if invalid_columns:
+                        print(f"Invalid columns: {invalid_columns}. Try again.")
+                        continue
+
+                    chosen_columns = [map_lowercase[col] for col in chosen_columns]
+
+                else:
+
+                    chosen_columns = columns_available
+
+                print(f"Available FIPS codes: {fips_codes}")
+                spec_median = input("Do you wish to find median of any specific FIPS codes, or all? Write which FIPS codes in this format: '1001 1003' etc. (without quotes) or 'all' for all: ")
+
+                if (spec_median.lower() == "all"):
+
+                    df_filtered = df[df["fips"].isin(fips_codes)]
+                    median_values = df_filtered.groupby("fips")[chosen_columns].median(numeric_only=True)
+
+                    return median_values
+                
+                else:
+
+                    try:
+
+                        chosen_fips = list(map(int, spec_median.strip().split()))
+
+                        valid_fips = [f for f in chosen_fips if f in fips_codes]
+                        
+                        if not valid_fips:
+                            print("None of the provided FIPS codes are valid. Try again.")
+                            continue
+                        
+                        df_filtered = df[df["fips"].isin(valid_fips)]
+                        median_values = df_filtered.groupby("fips")[chosen_columns].median(numeric_only=True)
+
+                        return median_values
+                    
+                    except ValueError:
+                        print("Invalid FIPS code input. Please enter FIPS codes in this format: '1001 1003' etc. (without quotes) next time.")
+        
+            else:
+
+                return f"No median value chosen."
+    
+        except Exception as e:
+            print("Something went wrong.", e)
