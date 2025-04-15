@@ -133,7 +133,8 @@ def final_data():
 
     return final
 
-def statistics(df):
+def statistics():
+    df = final_data()
     if df.empty:
         print("DataFrame er tom.")
 
