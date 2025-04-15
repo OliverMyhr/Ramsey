@@ -177,7 +177,7 @@ def find_mean_value(df, fips_codes):
                         mean_values = df_filtered.groupby("fips")[chosen_columns].mean(numeric_only=True)
 
                         mean_values = mean_values.round(2)
-                        
+
                         return mean_values
                     
                     except ValueError:
