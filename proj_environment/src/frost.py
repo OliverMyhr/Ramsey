@@ -3,6 +3,9 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 import pandasql as pdsql
+import numpy as np
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 load_dotenv()
 
@@ -129,3 +132,13 @@ def final_data():
     final = analyze(cleaned)
 
     return final
+
+def statistics(df):
+    if df.empty:
+        print("DataFrame er tom.")
+
+        return df
+    
+    stats = df.groupby(["sourceId", "elementId"])["avg_value"].agg(["mean", "median", "std", "min", "max", "count"])
+
+    return stats
