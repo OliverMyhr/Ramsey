@@ -3,9 +3,9 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 import pandasql as pdsql
-import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
+import numpy as np
 
 load_dotenv()
 
@@ -77,6 +77,9 @@ def to_df():
         df_e["referenceTime"] = e.get("referenceTime", None)
         df_e["sourceId"] = e.get("sourceId", None)
 
+        if "unit" not in df_e.columns:
+            df_e["unit"] = None
+
         dfs.append(df_e)
 
     if not dfs:
@@ -86,7 +89,7 @@ def to_df():
 
     df = pd.concat(dfs, ignore_index=True)
 
-    wanted = ["referenceTime", "sourceId", "elementId", "value"]
+    wanted = ["referenceTime", "sourceId", "elementId", "value", "unit"]
     df = df[wanted]
 
     df["referenceTime"] = pd.to_datetime(df["referenceTime"])
@@ -111,9 +114,9 @@ def analyze(df):
     df["sourceId"] = df["sourceId"].map(source_mapping).fillna(df["sourceId"])
 
     query = """
-    SELECT referenceTime, sourceId, elementId, AVG(value) as avg_value
+    SELECT referenceTime, sourceId, elementId, AVG(value) as avg_value, unit
     FROM df
-    GROUP BY referenceTime, sourceId, elementId
+    GROUP BY referenceTime, sourceId, elementId, unit
     """
     result = pdsql.sqldf(query, locals())
 
@@ -146,7 +149,7 @@ def statistics():
     if df.empty:
         return "DataFrame er tom."
     
-    stats = df.groupby(["sourceId", "elementId"])["avg_value"].agg(["mean", "median", "std", "min", "max", "count"])
+    stats = df.groupby(["sourceId", "elementId", "unit"])["avg_value"].agg(["mean", "median", "std", "min", "max", "count"])
 
     return stats
 
@@ -202,7 +205,7 @@ def find_outliers():
 
     outliers = df[(df["avg_value"] < lower) | (df["avg_value"] > upper)]
 
-    print(f"Antall outliers: {len(outliers)}\n")
+    print(f"Antall avvik: {len(outliers)}\n")
 
     return outliers
 
@@ -219,7 +222,50 @@ def remove_outliers():
 
     removed = df[(df["avg_value"] >= lower) & (df["avg_value"] <= upper)]
 
-    print(f"Originalt antall rader: {len(df)}")
-    print(f"Antall rader etter fjerning av outliers: {len(removed)}\n\n")
-
     return removed
+
+
+def final_df_plots():
+    df = remove_outliers()
+
+    fig, axs = plt.subplots(2, 1, figsize = (10, 10))
+
+    try:
+        df["time_index"] = np.arange(len(df))
+
+        sns.lineplot(data = df, x = "time_index", y = "avg_value", hue = "sourceId", style = "elementId", ax = axs[0])
+        axs[0].set_title("Gjennomsnittsverdier over tid")
+        axs[0].set_xlabel("Tid")
+        axs[0].set_ylabel("Verdi")
+        axs[0].grid(True)
+        axs[0].legend()
+      
+        df["referenceTime"] = pd.to_datetime(df["referenceTime"])
+
+        first_date = df["referenceTime"].iloc[0]
+        last_date = df["referenceTime"].iloc[-1]
+
+        axs[0].set_xticks([df["time_index"].iloc[0], df["time_index"].iloc[-1]])
+        axs[0].set_xticklabels([first_date.strftime("%Y-%m-%d"), last_date.strftime("%Y-%m-%d")])
+
+    except Exception as e:
+        print("Feil oppsto", e)
+        fig.delaxes(axs[0])
+    
+    try:
+        df["element_with_unit"] = df["elementId"] + " [" + df["unit"].astype(str) + "]"
+
+        sns.boxplot(data = df, x = "sourceId", y = "avg_value", hue = "element_with_unit", ax = axs[1])
+        axs[1].set_title("Boksplot per stasjon")
+        axs[1].set_xlabel("Stasjon")
+        axs[1].set_ylabel("Verdi")
+        axs[1].grid(True)
+        axs[1].legend()
+    
+    except Exception as e:
+        print("Feil oppsto", e)
+        fig.delaxes(axs[1])
+
+    plt.subplots_adjust(hspace = 0.4)
+
+    plt.show()
