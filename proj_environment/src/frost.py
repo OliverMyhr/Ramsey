@@ -133,13 +133,58 @@ def final_data():
 
     return final
 
+def pivot_data():
+    df = final_data()
+    pivot = df.pivot_table(values = "avg_value", index = "referenceTime", columns = "elementId")
+
+    return pivot
+
+
 def statistics():
     df = final_data()
-    if df.empty:
-        print("DataFrame er tom.")
 
-        return df
+    if df.empty:
+        return "DataFrame er tom."
     
     stats = df.groupby(["sourceId", "elementId"])["avg_value"].agg(["mean", "median", "std", "min", "max", "count"])
 
     return stats
+
+
+def relation_analysis():
+    pivot = pivot_data()
+
+    if len(pivot.columns) < 2:
+        return "Ikke nok elementer for å beregne sammenhenger."
+
+    relation = pivot.corr()
+
+    return f"Skala mellom -1 og 1, der 1 betyr sterk sammenheng, tall nærmere 0 betyr svak sammenheng.\n\n{relation}"
+
+
+def relation_analysis_plots():
+    pivot = pivot_data()    
+    relation = pivot.corr()
+
+    fig, axs = plt.subplots(1, 2, figsize = (15, 5))
+
+    try:
+        sns.heatmap(relation, annot = True, cmap = "coolwarm", fmt = ".2f", square = True, ax = axs[0])
+        axs[0].set_title("Sammenheng mellom elementer")
+    
+    except Exception as e:
+            print("Feil under plotting", e)
+            fig.delaxes(axs[0])
+
+    if "air_temperature" in pivot.columns and "relative_humidity" in pivot.columns:
+        sns.scatterplot(x = pivot["air_temperature"], y = pivot["relative_humidity"], ax = axs[1])
+        axs[1].set_xlabel("Temperatur [°C]")
+        axs[1].set_ylabel("Luftfuktighet [%]")
+        axs[1].set_title("Temperatur vs Luftfuktighet")
+        axs[1].grid(True)
+
+    else:
+        fig.delaxes(axs[1])
+        print("Manglende data")
+
+    plt.show()
