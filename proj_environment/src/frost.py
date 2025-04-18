@@ -188,3 +188,38 @@ def relation_analysis_plots():
         print("Manglende data")
 
     plt.show()
+
+
+def find_outliers():
+    df = final_data()
+
+    k1 = df["avg_value"].quantile(0.25)
+    k3 = df["avg_value"].quantile(0.75)
+
+    ikv = k3 - k1
+    lower = k1 - 1.5 * ikv
+    upper = k3 + 1.5 * ikv
+
+    outliers = df[(df["avg_value"] < lower) | (df["avg_value"] > upper)]
+
+    print(f"Antall outliers: {len(outliers)}\n")
+
+    return outliers
+
+
+def remove_outliers():
+    df = final_data()
+
+    k1 = df["avg_value"].quantile(0.25)
+    k3 = df["avg_value"].quantile(0.75)
+
+    ikv = k3 - k1
+    lower = k1 - 1.5 * ikv
+    upper = k3 + 1.5 * ikv
+
+    removed = df[(df["avg_value"] >= lower) & (df["avg_value"] <= upper)]
+
+    print(f"Originalt antall rader: {len(df)}")
+    print(f"Antall rader etter fjerning av outliers: {len(removed)}\n\n")
+
+    return removed
