@@ -1,8 +1,4 @@
-import requests
-import os
-from dotenv import load_dotenv
 import pandas as pd
-import pandasql as pdsql
 from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
