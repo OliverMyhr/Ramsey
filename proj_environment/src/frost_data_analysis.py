@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from frost import final_data
+from frost_data_collection import final_data
 
 
 def pivot_data():
@@ -105,9 +105,11 @@ def final_df_plots():
     fig, axs = plt.subplots(2, 1, figsize = (10, 10))
 
     try:
+        df["element_with_unit"] = df["elementId"] + " [" + df["unit"].astype(str) + "]"
         df["time_index"] = np.arange(len(df))
 
-        sns.lineplot(data = df, x = "time_index", y = "avg_value", hue = "sourceId", style = "elementId", ax = axs[0])
+        clrs = {df["element_with_unit"][0] : "red", df["element_with_unit"][1] : "blue", df["element_with_unit"][2] : "yellow"}
+        sns.lineplot(data = df, x = "time_index", y = "avg_value", hue = "element_with_unit", palette = clrs, dashes = (1, 50), ax = axs[0])
         axs[0].set_title("Gjennomsnittsverdier over tid")
         axs[0].set_xlabel("Tid")
         axs[0].set_ylabel("Verdi")
@@ -140,6 +142,6 @@ def final_df_plots():
         print("Feil oppsto", e)
         fig.delaxes(axs[1])
 
-    plt.subplots_adjust(hspace = 0.4)
+    plt.subplots_adjust(hspace = 0.5)
 
     plt.show()
