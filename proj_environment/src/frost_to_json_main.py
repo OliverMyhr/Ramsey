@@ -1,8 +1,8 @@
 import os
-from frost import json_file as jf
-from frost import final_data as fd
+from frost_data_collection import json_file as jf
+from frost_data_collection import final_data as fd
 from frost_to_json_function import save_to_json as sj
-from frost import params as p
+from frost_data_collection import params as p
 
 def main():
     base_path = os.path.dirname(os.path.abspath(__file__))  

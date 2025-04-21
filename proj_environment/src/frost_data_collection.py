@@ -2,6 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import json
 import pandasql as pdsql
 from matplotlib import pyplot as plt
 import seaborn as sns
@@ -36,8 +37,6 @@ def json_file(parameters):
 
 
 def understand_structure():
-    import json
-
     understand = json_file(test_params)
     js = json.dumps(understand, indent = 5)
     key = understand.keys()
@@ -99,7 +98,7 @@ def to_df():
 
 
 def clean(df):
-    df.dropna(subset=["value"], inplace=True)
+    df.dropna(subset=["value"], inplace = True)
     df["value"] = df["value"].fillna(df["value"].mean())
 
     return df
