@@ -35,6 +35,17 @@ def save_filtered_data(filtered_df):
     filtered_df.to_csv('../data/filtered1_data.csv', index=False)
     print(f"First rows in the filtered dataset: {filtered_df.head()}")
 
+def save_temperature_data(filtered_df):
+    temp_df = filtered_df[['fips', 'date', 'T2M']]
+    temp_df.to_csv('../data/filtered_temperature_data.csv', index=False)
+    print(f"First rows in the filtered dataset: {temp_df.head()}")
+
+def save_precipitation_data(filtered_df):
+    prec_df = filtered_df[['fips', 'date', 'PRECTOT']]
+    prec_df.to_csv('../data/filtered_precipitation_data.csv', index=False)
+    print(f"First rows in the filtered dataset: {prec_df.head()}")
+
+
 def new_file():
     while True:
         try:
@@ -50,7 +61,10 @@ def new_file():
                 print_unique_fips(df)
                 selected_fips = [1001, 1003, 1005]
                 filtered_df = filter_data(df, selected_fips)
+                
                 save_filtered_data(filtered_df)
+                save_temperature_data(df)
+                save_precipitation_data(df)
 
                 print(f"Amount of rows after filtering: {len(filtered_df)}")
 
