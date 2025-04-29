@@ -12,7 +12,7 @@ def download_zip(url):
 
 def open_zip(response):
     zip_file = zipfile.ZipFile(io.BytesIO(response.content))
-    print("Files in ZIP:", zip_file.namelist())
+    print("Filer i ZIP:", zip_file.namelist())
     return zip_file
 
 def get_csv_filename(zip_file):
@@ -25,7 +25,7 @@ def read_csv_from_zip(zip_file, csv_filename):
 
 def print_unique_fips(df):
     unique_fips = df['fips'].unique()
-    return f"Unique fips-codes: {unique_fips[:20]}"
+    return f"Unike FIPS koder: {unique_fips[:20]}"
 
 def filter_data(df, selected_fips):
     filtered_df = df[df['fips'].isin(selected_fips)]
@@ -33,23 +33,23 @@ def filter_data(df, selected_fips):
 
 def save_filtered_data(filtered_df):
     filtered_df.to_csv('../data/filtered1_data.csv', index=False)
-    print(f"First rows in the filtered dataset: {filtered_df.head()}")
+    print(f"Første rader i filtrert datasett: {filtered_df.head()}")
 
 def save_temperature_data(filtered_df):
     temp_df = filtered_df[['fips', 'date', 'T2M']]
     temp_df.to_csv('../data/filtered_temperature_data.csv', index=False)
-    print(f"First rows in the filtered dataset: {temp_df.head()}")
+    print(f"Første rader i filtrert datasett: {temp_df.head()}")
 
 def save_precipitation_data(filtered_df):
     prec_df = filtered_df[['fips', 'date', 'PRECTOT']]
     prec_df.to_csv('../data/filtered_precipitation_data.csv', index=False)
-    print(f"First rows in the filtered dataset: {prec_df.head()}")
+    print(f"Første rader i filtrert datasett: {prec_df.head()}")
 
 
 def new_file():
     while True:
         try:
-            new = input("Do you wish to create a new file? (y/n): ")
+            new = input("Ønsker du å lage en ny fil? (y/n): ")
 
             if new.lower() == "y":
 
@@ -66,21 +66,21 @@ def new_file():
                 save_temperature_data(df)
                 save_precipitation_data(df)
 
-                print(f"Amount of rows after filtering: {len(filtered_df)}")
+                print(f"Antall rader etter filtrering: {len(filtered_df)}")
 
                 break
 
             elif new.lower() == "n":
 
-                print("No new file created")
+                print("Ingen ny fil dannet.")
 
                 break
 
             else:
 
-                print("Invalid input, please enter 'y' or 'n'")
+                print("Invalid input, vennligst skriv 'y' eller 'n'")
 
         except Exception as e:
-            print(f"An error occured: {e}")
+            print(f"En feilmelding oppsto: {e}")
 
 new_file()

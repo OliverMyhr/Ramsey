@@ -27,7 +27,7 @@ def check_unrealistic_temperature(df, min_temp, max_temp):
 
         try:
 
-            check = input("What kind of check do you want? '1' = T2M, '2' = T2M_MIN, '3' = T2M_MAX, '4' = exit: ")
+            check = input("Hva slags type sjekk vil du ha? '1' = T2M, '2' = T2M_MIN, '3' = T2M_MAX, '4' = avslutt: ")
 
             unrealistic_T2M = unrealistic_temp_T2M(df, min_temp, max_temp)
             unrealistic_T2M_MIN = unrealistic_temp_T2M_MIN(df, min_temp, max_temp)
@@ -36,32 +36,32 @@ def check_unrealistic_temperature(df, min_temp, max_temp):
             if check == "1":
 
                 if unrealistic_T2M.empty:
-                    return f"No unrealistic temperature values found. No need to adjust any rows."
+                    return f"Ingen urealistiske temperaturer funnet. Trenger ikke endre på noen rader."
                 else:
-                    return f"Unrealistic temperature values found in {len(unrealistic_T2M)} rows. The values consist of {unrealistic_T2M["T2M"].unique()}."
+                    return f"Urealistiske temperaturverdier funnet i {len(unrealistic_T2M)} rader. Verdiene består av {unrealistic_T2M["T2M"].unique()}."
                 
             elif check == "2":
 
                 if unrealistic_T2M_MIN.empty:
-                    return f"No unrealistic temperature values found. No need to adjust any rows."
+                    return f"Ingen urealistiske temperaturer funnet. Trenger ikke endre på noen rader."
                 else:
-                    return f"Unrealistic temperature values found in {len(unrealistic_T2M_MIN)} rows. The values consist of {unrealistic_T2M_MIN["T2M_MIN"].unique()}."
+                    return f"Urealistiske temperaturverdier funnet i {len(unrealistic_T2M_MIN)} rader. Verdiene består av {unrealistic_T2M_MIN["T2M_MIN"].unique()}."
                 
             elif check == "3":
 
                 if unrealistic_T2M_MAX.empty:
-                    return f"No unrealistic temperature values found. No need to adjust any rows."
+                    return f"Ingen urealistiske temperaturer funnet. Trenger ikke endre på noen rader."
                 else:
-                    return f"Unrealistic temperature values found in {len(unrealistic_T2M_MAX)} rows. The values consist of {unrealistic_T2M_MAX["T2M_MAX"].unique()}."
+                    return f"Urealistiske temperaturverdier funnet i {len(unrealistic_T2M_MAX)} rader. Verdiene består av {unrealistic_T2M_MAX["T2M_MAX"].unique()}."
             
             elif check == "4":
-                return f"Stopping program."
+                return f"Avslutter program."
             
             else:
-                print("Invalid input. Please enter '1', '2', '3', or '4'(exit).")
+                print("Invalid input. Skriv enten '1', '2', '3', eller '4'(avslutt).")
 
         except Exception as e:
-            print("Something went wrong:", e)
+            print("Noe gikk galt", e)
 
 def replace(df, fips_codes):
     
@@ -92,7 +92,7 @@ def replace_to_csv(df, fips_codes):
 
         try:
 
-            replacement = input("Do you want to replace the values in the dataset? (y/n): ")
+            replacement = input("Ønsker du å erstatte verdiene i datasettet? (y/n): ")
 
             if replacement.lower() == "y":
 
@@ -104,17 +104,17 @@ def replace_to_csv(df, fips_codes):
                                    
                 df.to_csv("../data/filtered1_data_cleaned.csv", index = False)
 
-                return f"New file created with replaced values."
+                return f"Ny fil laget med erstattede verdier."
             
             elif replacement.lower() == "n":
 
-                return f"No new file created."
+                return f"Ingen ny fil laget."
             
             else:
-                print(f"Invalid input. Please enter 'y' or 'n'.")
+                print(f"Invalid input. Skriv 'y'(ja) eller 'n'(nei).")
         
         except Exception as e:
-            print("Something went wrong.", e)
+            print("Noe gikk galt", e)
 
 def find_mean_value(df, fips_codes):
     
@@ -122,25 +122,25 @@ def find_mean_value(df, fips_codes):
 
         try:
 
-            f_mean = input("Do you wish to find the mean values? (y/n): ")
+            f_mean = input("Ønsker du å finne gjennomsnittsverdier? (y/n): ")
 
             if f_mean.lower() == "y":
                 
                 columns_available = [col for col in df.columns if col not in ["fips", "date"]]
-                print(f"Columns available for mean value calculation: {columns_available}")
-                spec_cols = input("Do you wish to find the mean value for specific columns or all? (Write 1 for 'specific' or 2 for 'all': ")
+                print(f"Tilgjengelige kolonner for utregning av gjennomsnitt: {columns_available}")
+                spec_cols = input("Ønsker du å finne gjennomsnittsverdier for spesifikke kolonner eller alle? (Skriv 1 for 'spesifikke' eller 2 for 'alle': ")
 
                 map_lowercase = {col.lower(): col for col in columns_available}
                 
                 if spec_cols == "1":
 
-                    choose_column = input("Which column(s) would you like to find the mean value for? Write column(s) in this format: 'T2M T2M_MIN' etc. (without quotes): ")
+                    choose_column = input("Hvilke(n) kolonne(r) vil du finne gjennomsnittet for? Skriv kolonne(r) på følgende format: 'T2M T2M_MIN' osv. (uten anførselstegn): ")
                     chosen_columns = choose_column.split()
 
                     invalid_columns = [col for col in chosen_columns if col not in map_lowercase]
 
                     if invalid_columns:
-                        print(f"Invalid columns: {invalid_columns}. Try again.")
+                        print(f"Invalide kolonner: {invalid_columns}. Prøv igjen.")
                         continue
 
                     chosen_columns = [map_lowercase[col] for col in chosen_columns]
@@ -149,10 +149,10 @@ def find_mean_value(df, fips_codes):
 
                     chosen_columns = columns_available
 
-                print(f"Available FIPS codes: {fips_codes}")
-                spec_mean_value = input("Do you wish to find mean value of any specific FIPS codes, or all? Write which FIPS codes in this format: '1001 1003' etc. (without quotes) or 'all' for all: ")
+                print(f"Tilgjengelige FIPS koder: {fips_codes}")
+                spec_mean_value = input("Ønsker du å finne gjennomsnittet for noen spesifikke FIPS koder, eller alle? Skriv ønskede FIPS koder på følgende format: '1001 1003' osv. (uten anførselstegn) eller 'alle' for alle: ")
 
-                if (spec_mean_value.lower() == "all"):
+                if (spec_mean_value.lower() == "alle"):
 
                     df_filtered = df[df["fips"].isin(fips_codes)]
                     mean_values = df_filtered.groupby("fips")[chosen_columns].mean(numeric_only=True)
@@ -170,7 +170,7 @@ def find_mean_value(df, fips_codes):
                         valid_fips = [f for f in chosen_fips if f in fips_codes]
                         
                         if not valid_fips:
-                            print("None of the provided FIPS codes are valid. Try again.")
+                            print("Ingen av de skrevne FIPS kodene er valide. Prøv igjen.")
                             continue
                         
                         df_filtered = df[df["fips"].isin(valid_fips)]
@@ -181,14 +181,14 @@ def find_mean_value(df, fips_codes):
                         return mean_values
                     
                     except ValueError:
-                        print("Invalid FIPS code input. Please enter FIPS codes in this format: '1001 1003' etc. (without quotes) next time.")
+                        print("Invalid FIPS kode input. Skriv FIPS kode(r) på følgende format: '1001 1003' osv. (uten anførselstegn) neste gang.")
         
             else:
 
-                return f"No mean value chosen."
+                return f"Ingen gjennomsnittsverdi valgt."
     
         except Exception as e:
-            print("Something went wrong.", e)
+            print("Noe gikk galt", e)
 
 def find_median(df, fips_codes):
     
@@ -196,25 +196,25 @@ def find_median(df, fips_codes):
 
         try:
             
-            f_median = input("Do you wish to find the median values? (y/n): ")
+            f_median = input("Ønsker du å finne median verdier? (y/n): ")
 
             if f_median.lower() == "y":
                 
                 columns_available = [col for col in df.columns if col not in ["fips", "date"]]
-                print(f"Columns available for median calculation: {columns_available}")
-                spec_cols = input("Do you wish to find the median for specific columns or all? (Write 1 for 'specific' or 2 for 'all': ")
+                print(f"Tilgjengelige kolonner for beregning av median: {columns_available}")
+                spec_cols = input("Ønsker du å finne median verdier for spesifikke kolonner eller alle? (Skriv 1 for 'spesifikk' eller 2 for 'alle': ")
 
                 map_lowercase = {col.lower(): col for col in columns_available}
                 
                 if spec_cols == "1":
 
-                    choose_column = input("Which column(s) would you like to find the median for? Write column(s) in this format: 'T2M T2M_MIN' etc. (without quotes): ")
+                    choose_column = input("Hvilke(n) kolonne(r) ønsker du å finne median for? Skriv kolonne(r) på følgende format: 'T2M T2M_MIN' osv. (uten anførselstegn): ")
                     chosen_columns = choose_column.split()
 
                     invalid_columns = [col for col in chosen_columns if col not in map_lowercase]
 
                     if invalid_columns:
-                        print(f"Invalid columns: {invalid_columns}. Try again.")
+                        print(f"Invalide kolonner: {invalid_columns}. Prøv igjen.")
                         continue
 
                     chosen_columns = [map_lowercase[col] for col in chosen_columns]
@@ -223,10 +223,10 @@ def find_median(df, fips_codes):
 
                     chosen_columns = columns_available
 
-                print(f"Available FIPS codes: {fips_codes}")
-                spec_median = input("Do you wish to find median of any specific FIPS codes, or all? Write which FIPS codes in this format: '1001 1003' etc. (without quotes) or 'all' for all: ")
+                print(f"Tilgjengelige FIPS koder: {fips_codes}")
+                spec_median = input("Ønsker du å finne median for spesifikke FIPS koder, eller alle? Skriv ønskede FIPS koder på følgende format: '1001 1003' etc. (uten anførselstegn) eller 'alle' for alle: ")
 
-                if (spec_median.lower() == "all"):
+                if (spec_median.lower() == "alle"):
 
                     df_filtered = df[df["fips"].isin(fips_codes)]
                     median_values = df_filtered.groupby("fips")[chosen_columns].median(numeric_only=True)
@@ -242,7 +242,7 @@ def find_median(df, fips_codes):
                         valid_fips = [f for f in chosen_fips if f in fips_codes]
                         
                         if not valid_fips:
-                            print("None of the provided FIPS codes are valid. Try again.")
+                            print("Ingen av de skrevne FIPS kodene er valide. Prøv igjen.")
                             continue
                         
                         df_filtered = df[df["fips"].isin(valid_fips)]
@@ -251,11 +251,11 @@ def find_median(df, fips_codes):
                         return median_values
                     
                     except ValueError:
-                        print("Invalid FIPS code input. Please enter FIPS codes in this format: '1001 1003' etc. (without quotes) next time.")
+                        print("Invalid FIPS kode input. Skriv FIPS koder på følgende format: '1001 1003' etc. (uten anførselstegn) neste gang.")
         
             else:
 
-                return f"No median value chosen."
+                return f"Ingen medianverdi valgt."
     
         except Exception as e:
-            print("Something went wrong.", e)
+            print("Noe gikk galt", e)
