@@ -200,5 +200,5 @@ def visualize_corr_var1_and_rest(corr_dict, fips_codes, var): #Funksjon for å v
 
         except KeyError as e:
 
-            print(f"KeyError: {e}. Vennligst sjekk variabelnavn")
+            print(f"KeyError: {e}. Vennligst sjekk variabelnavn") #Håndterer KeyError hvis variabelnavnene ikke finnes i datasettet
             return
