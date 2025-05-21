@@ -208,7 +208,7 @@ def find_median(df, fips_codes): #Funksjon for å finne medianverdier for spesif
                 print(f"Tilgjengelige kolonner for beregning av median: {columns_available}")
                 spec_cols = input("Ønsker du å finne median verdier for spesifikke kolonner eller alle? (Skriv 1 for 'spesifikk' eller 2 for 'alle': ")
 
-                map_lowercase = {col.lower(): col for col in columns_available} #Gjør også her om til lowercase for å gjøre detenklere for bruker
+                map_lowercase = {col.lower(): col for col in columns_available} #Gjør også her om til lowercase for å gjøre det enklere for bruker
                 
                 if spec_cols == "1":
 
