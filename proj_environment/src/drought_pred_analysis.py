@@ -171,19 +171,19 @@ def regression_analysis_regplot(df, fips_codes):
 
         try:
 
-            print(f"\nTilgjengelige variabler: {[v.lower() for v in all_vars]}")
+            print(f"\nTilgjengelige variabler: {[v.lower() for v in all_vars]}") #Printer tilgjengelige variabler for brukeren
             target_input = input("Velg en variabel (små bokstaver) eller 'n' for å avslutte: ").strip().lower()
 
             if target_input == 'n':
                 print("Avslutter regresjonsvisualisering (regplot).")
                 break
 
-            if target_input not in map_lowercase:
+            if target_input not in map_lowercase: #Sjekker om variabelen finnes i kolonnelista, hvis ikke så gir den en feilmelding
                 print(f"Ugyldig valg: {target_input}. Prøv igjen.")
                 continue
 
-            chosen_var = map_lowercase[target_input]
-            features = [v for v in all_vars if v != chosen_var]
+            chosen_var = map_lowercase[target_input] #Mapper lowercase til originalt kolonnenavn
+            features = [v for v in all_vars if v != chosen_var] #Setter features til alle variabler bortsett fra den valgte variabelen
 
             for fips in fips_codes: #Itererer gjennom FIPS koder for å lage regresjonslinjer for hver FIPS kode
 
@@ -194,8 +194,8 @@ def regression_analysis_regplot(df, fips_codes):
                     print(f"Hopper over FIPS {fips}, ingen gyldige data.")
                     continue
 
-                x = df_fips[features]
-                y = df_fips[chosen_var]
+                x = df_fips[features] #Setter x verdier for modellen
+                y = df_fips[chosen_var] #Setter y verdier for modellen
 
                 x_train, _, y_train, _ = train_test_split(x, y, test_size=0.2, random_state=0) #Deler datasett i trenings og test sett
 
@@ -204,11 +204,11 @@ def regression_analysis_regplot(df, fips_codes):
                 for ft in features:
 
                     plt.figure(figsize=(8, 5))
-                    sns.regplot(x=x_train[ft], y=y_train, scatter_kws={"alpha": 0.5}, line_kws={"color": "red"})
+                    sns.regplot(x=x_train[ft], y=y_train, scatter_kws={"alpha": 0.5}, line_kws={"color": "red"}) #Plotter regresjonslinje for hver funksjon
                     plt.title(f"FIPS {fips} {chosen_var} som funksjon av {ft}")
                     plt.xlabel(ft)
                     plt.ylabel(chosen_var)
-                    plt.grid(True)
+                    plt.grid(True) #Setter grid for bedre lesbarhet
                     plt.tight_layout()
                     plt.show()
 
@@ -217,49 +217,51 @@ def regression_analysis_regplot(df, fips_codes):
 
 def regression_analysis_lineplot(df, fips_codes):
     
-    df["date"] = pd.to_datetime(df["date"])
-    all_vars = ["PRECTOT", "PS", "QV2M", "T2M", "T2MDEW", "WS10M"]
-    map_lowercase = {v.lower(): v for v in all_vars}
+    df["date"] = pd.to_datetime(df["date"]) #Konverterer dato kolonnen til datetime format
+    all_vars = ["PRECTOT", "PS", "QV2M", "T2M", "T2MDEW", "WS10M"] #Kolonner som skal brukes i modellen, kan justeres
+    map_lowercase = {v.lower(): v for v in all_vars} #Lager en ordbok for å mappe lowercase til originalt kolonnenavn
 
     while True:
 
         try:
 
-            print(f"\nTilgjengelige variabler: {[v.lower() for v in all_vars]}")
+            print(f"\nTilgjengelige variabler: {[v.lower() for v in all_vars]}") #Printer tilgjengelige variabler for brukeren
             var_input = input("Velg en variabel (små bokstaver) eller 'n' for å avslutte: ").strip().lower()
 
             if var_input == 'n':
+
                 print("Avslutter regresjonsvisualisering (linjeplot).")
                 break
 
-            if var_input not in map_lowercase:
+            if var_input not in map_lowercase: #Sjekker om variabelen finnes i kolonnelista, hvis ikke så gir den en feilmelding
+
                 print(f"Ugyldig variabel: {var_input}. Prøv igjen.")
                 continue
 
-            chosen_var = map_lowercase[var_input]
-            features = [v for v in all_vars if v != chosen_var]
+            chosen_var = map_lowercase[var_input] #Mapper lowercase til originalt kolonnenavn
+            features = [v for v in all_vars if v != chosen_var] #Setter features til alle variabler bortsett fra den valgte variabelen
 
             for fips in fips_codes:
 
-                df_fips = df[df["fips"] == fips].dropna(subset=features + [chosen_var])
+                df_fips = df[df["fips"] == fips].dropna(subset=features + [chosen_var]) #Filtrerer datasett for valgt FIPS kode
 
-                if df_fips.empty:
+                if df_fips.empty: #Sjekker om datasettet er tomt etter filtrering
 
                     print(f"Hopper over FIPS {fips}, ingen gyldige data.")
                     continue
 
-                df_fips = df_fips.sort_values("date")
-                x = df_fips[features]
-                y = df_fips[chosen_var]
+                df_fips = df_fips.sort_values("date") #Sorter dataene etter dato for å lage en linjeplot
+                x = df_fips[features] #Setter x verdier for modellen
+                y = df_fips[chosen_var] #Setter y verdier for modellen
 
                 model = LinearRegression() #Lager en lineær regresjonsmodell
                 model.fit(x, y)
                 df_fips["prediction"] = model.predict(x)
 
                 print(f"\nFIPS {fips}: Faktisk vs. predikert {chosen_var} over tid")
-                plt.figure(figsize=(10, 5))
-                sns.lineplot(x="date", y=chosen_var, data=df_fips, label="Faktisk", color="blue")
-                sns.lineplot(x="date", y="prediction", data=df_fips, label="Predikert", color="orange", linestyle="--")
+                plt.figure(figsize=(10, 5)) #Lager en figur for å vise regresjonsresultatene
+                sns.lineplot(x="date", y=chosen_var, data=df_fips, label="Faktisk", color="blue") #Plotter faktiske verdier
+                sns.lineplot(x="date", y="prediction", data=df_fips, label="Predikert", color="orange", linestyle="--") #Plotter predikerte verdier
                 plt.title(f"FIPS {fips}: Faktisk vs. Predikert {chosen_var} over tid")
                 plt.xlabel("Dato")
                 plt.ylabel(chosen_var)
