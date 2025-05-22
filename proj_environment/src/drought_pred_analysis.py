@@ -272,3 +272,66 @@ def regression_analysis_lineplot(df, fips_codes):
 
         except Exception as e:
             return f"Feil: {e}" #Håndterer feil ved å returnere en feilmelding
+
+def regression_analysis_barplot(df, fips_codes):
+
+    df["date"] = pd.to_datetime(df["date"])
+    all_vars = ["PRECTOT", "PS", "QV2M", "T2M", "T2MDEW", "WS10M"]
+    map_lowercase = {v.lower(): v for v in all_vars}
+
+    while True:
+
+        try:
+
+            print(f"\nTilgjengelige variabler: {[v.lower() for v in all_vars]}")
+            var_input = input("Velg en variabel (små bokstaver) eller 'n' for å avslutte: ").strip().lower()
+
+            if var_input == 'n':
+
+                print("Avslutter regresjonsvisualisering (søylediagram).")
+                break
+
+            if var_input not in map_lowercase:
+
+                print(f"Ugyldig variabel: {var_input}. Prøv igjen.")
+                continue
+
+            chosen_var = map_lowercase[var_input]
+            features = [v for v in all_vars if v != chosen_var]
+
+            for fips in fips_codes:
+
+                df_fips = df[df["fips"] == fips].dropna(subset=features + [chosen_var])
+
+                if df_fips.empty:
+
+                    print(f"Hopper over FIPS {fips}, ingen gyldige data.")
+                    continue
+
+                df_fips = df_fips.sort_values("date")
+                x = df_fips[features]
+                y = df_fips[chosen_var]
+
+                model = LinearRegression()
+                model.fit(x, y)
+                df_fips["prediction"] = model.predict(x)
+
+                plot_df = df_fips[["date", chosen_var, "prediction"]].melt(id_vars="date", 
+                                                                           var_name="Type", 
+                                                                           value_name="Verdi")
+
+                print(f"\nFIPS {fips}: Faktisk vs. predikert {chosen_var} som søylediagram")
+
+                plt.figure(figsize=(14, 6))
+                sns.barplot(data=plot_df, x="date", y="Verdi", hue="Type", dodge=True)
+                plt.title(f"FIPS {fips}: Faktisk vs. Predikert {chosen_var} over tid")
+                plt.xlabel("Dato")
+                plt.ylabel(chosen_var)
+                plt.xticks(rotation=45)
+                plt.legend(title="")
+                plt.grid(True, axis='y')
+                plt.tight_layout()
+                plt.show()
+
+        except Exception as e:
+            return f"Feil: {e}"
