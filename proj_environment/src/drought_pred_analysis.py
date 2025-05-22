@@ -230,7 +230,7 @@ def regression_analysis_lineplot(df, fips_codes):
 
             if var_input == 'n':
 
-                print("Avslutter regresjonsvisualisering (linjeplot).")
+                print("Avslutter regresjonsvisualisering.")
                 break
 
             if var_input not in map_lowercase: #Sjekker om variabelen finnes i kolonnelista, hvis ikke så gir den en feilmelding
@@ -263,7 +263,7 @@ def regression_analysis_lineplot(df, fips_codes):
                 sns.lineplot(x="date", y=chosen_var, data=df_fips, label="Faktisk", color="blue") #Plotter faktiske verdier
                 sns.lineplot(x="date", y="prediction", data=df_fips, label="Predikert", color="orange", linestyle="--") #Plotter predikerte verdier
                 plt.title(f"FIPS {fips}: Faktisk vs. Predikert {chosen_var} over tid")
-                plt.xlabel("Dato")
+                plt.xlabel("År")
                 plt.ylabel(chosen_var)
                 plt.legend()
                 plt.grid(True)
@@ -277,7 +277,7 @@ def regression_analysis_barplot(df, fips_codes):
 
     df["date"] = pd.to_datetime(df["date"])
     all_vars = ["PRECTOT", "PS", "QV2M", "T2M", "T2MDEW", "WS10M"]
-    map_lowercase = {v.lower(): v for v in all_vars}
+    map_lowercase = {v.lower(): v for v in all_vars} #Lager en ordbok for å mappe lowercase til originalt kolonnenavn
 
     while True:
 
@@ -288,20 +288,20 @@ def regression_analysis_barplot(df, fips_codes):
 
             if var_input == 'n':
 
-                print("Avslutter regresjonsvisualisering (søylediagram).")
+                print("Avslutter regresjonsvisualisering.")
                 break
 
-            if var_input not in map_lowercase:
+            if var_input not in map_lowercase: #Sjekker om variabelen finnes i kolonnelista, hvis ikke så gir den en feilmelding
 
                 print(f"Ugyldig variabel: {var_input}. Prøv igjen.")
                 continue
 
-            chosen_var = map_lowercase[var_input]
-            features = [v for v in all_vars if v != chosen_var]
+            chosen_var = map_lowercase[var_input] #Mapper lowercase til originalt kolonnenavn
+            features = [v for v in all_vars if v != chosen_var] #Setter features til alle variabler bortsett fra den valgte variabelen
 
             for fips in fips_codes:
 
-                df_fips = df[df["fips"] == fips].dropna(subset=features + [chosen_var])
+                df_fips = df[df["fips"] == fips].dropna(subset=features + [chosen_var]) #Filtrerer datasett for valgt FIPS kode
 
                 if df_fips.empty:
 
@@ -316,22 +316,29 @@ def regression_analysis_barplot(df, fips_codes):
                 model.fit(x, y)
                 df_fips["prediction"] = model.predict(x)
 
-                plot_df = df_fips[["date", chosen_var, "prediction"]].melt(id_vars="date", 
-                                                                           var_name="Type", 
-                                                                           value_name="Verdi")
+                print(f"\nFIPS {fips}: Faktisk vs. predikert {chosen_var} over tid")
+                plt.figure(figsize=(12, 6)) #Lager en figur for å vise regresjonsresultatene
+                width = 8 #Bredde på stolpene
 
-                print(f"\nFIPS {fips}: Faktisk vs. predikert {chosen_var} som søylediagram")
+                dates = df_fips["date"]
+                plt.bar(dates - pd.Timedelta(days=width/2), df_fips[chosen_var], width=width, label="Faktisk", color="blue", align='center') #Plotter faktiske verdier
+                plt.bar(dates + pd.Timedelta(days=width/2), df_fips["prediction"], width=width, label="Predikert", color="orange", align='center') #Plotter predikerte verdier
 
-                plt.figure(figsize=(14, 6))
-                sns.barplot(data=plot_df, x="date", y="Verdi", hue="Type", dodge=True)
                 plt.title(f"FIPS {fips}: Faktisk vs. Predikert {chosen_var} over tid")
-                plt.xlabel("Dato")
-                plt.ylabel(chosen_var)
-                plt.xticks(rotation=45)
-                plt.legend(title="")
-                plt.grid(True, axis='y')
+                plt.xlabel("År") #Setter x akse til år
+                plt.ylabel(chosen_var) #Setter y akse til den valgte variabelen
+
+                years = sorted(set(df_fips["date"].dt.year)) #Henter unike år fra datasettet
+                shown_years = [year for year in years if year % 2 == 0] #Viser bare hvert andre år
+
+                tick_positions = df_fips[df_fips["date"].dt.year.isin(shown_years)].groupby(df_fips["date"].dt.year).first()["date"] #Henter datoer for hvert andre år
+
+                plt.xticks(ticks=tick_positions, labels=[d.strftime('%Y') for d in tick_positions], rotation=45)
+
+                plt.legend()
+                plt.grid(True, axis='y', linestyle='--', alpha=0.7) #Setter grid for bedre lesbarhet
                 plt.tight_layout()
                 plt.show()
 
         except Exception as e:
-            return f"Feil: {e}"
+            return f"Feil: {e}" #Håndterer feil ved å returnere en feilmelding
