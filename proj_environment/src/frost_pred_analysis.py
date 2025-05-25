@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import frost_data_analysis as fda
 
+
 def fit_linear_model(x, y): # Bruker minste kvadraters metode fra matte 3 til å finne a og b, s.a y = ax + b passer best til datapunktene.
     valid = [not np.isnan(val) for val in y] 
 
@@ -37,6 +38,7 @@ def fit_linear_model(x, y): # Bruker minste kvadraters metode fra matte 3 til å
     b = x_hat[1]
 
     return a, b
+
 
 def visualize_reg(): # Visualiserer data og forutsetning ved hjelp av regresjonsmodellen, visualiserer også ugyldig data.
     df = fda.remove_outliers()
