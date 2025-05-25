@@ -40,4 +40,4 @@ Denne bygger videre på remove_outliers funksjonen fra frost_data_analysis.py. r
 Dette er en funksjon sender data fra API til en json fil.
 
 ### frost_to_json_main.py
-Det er denne py filen at frost_to_json funksjonen brukes til å sende rådata til en json fil og ferdigbehandlet data til en json fil. 
+Det er i denne py filen at frost_to_json funksjonen brukes til å sende rådata til en json fil og ferdigbehandlet data til en json fil. 
