@@ -6,14 +6,14 @@ import numpy as np
 from frost_data_collection import final_data
 
 
-def pivot_data():
+def pivot_data(): # Gjør om datafilens struktur slik som gjør det enklere for korrelasjonsanalyse
     df = final_data()
     pivot = df.pivot_table(values = "avg_value", index = "referenceTime", columns = "elementId")
 
     return pivot
 
 
-def statistics():
+def statistics(): # Statistikk analyse som gir gjennomsnitt, median, standardavvik osv. 
     df = final_data()
 
     if df.empty:
@@ -24,7 +24,7 @@ def statistics():
     return stats
 
 
-def relation_analysis():
+def relation_analysis(): # Korrelasjonsanalyse som gir en slags sammenheng mellom elementene som forklart i return linjen
     pivot = pivot_data()
 
     if len(pivot.columns) < 2:
@@ -35,7 +35,7 @@ def relation_analysis():
     return f"Skala mellom -1 og 1, der 1 betyr sterk sammenheng, tall nærmere 0 betyr svak sammenheng.\n\n{relation}"
 
 
-def relation_analysis_plots():
+def relation_analysis_plots(): # plotter korrelasjonsanalysen fra funksjonen over
     pivot = pivot_data()    
     relation = pivot.corr()
 
@@ -63,7 +63,7 @@ def relation_analysis_plots():
     plt.show()
 
 
-def find_outliers():
+def find_outliers(): # funksjon som finner avvik, det finnes andre metoder også, men dette er IQR metoden
     df = final_data()
 
     k1 = df["avg_value"].quantile(0.25)
@@ -80,7 +80,7 @@ def find_outliers():
     return outliers
 
 
-def remove_outliers():
+def remove_outliers(): # Gir en forbedret versjon uten outliers av final_data() filen fra frost_data_collection.py.
     df = final_data()
 
     k1 = df["avg_value"].quantile(0.25)
@@ -95,7 +95,7 @@ def remove_outliers():
     return removed
 
 
-def final_df_plots():
+def final_df_plots(): # Visualisering av noe data fra den nye remove_outliers() datafilen
     df = remove_outliers()
 
     fig, axs = plt.subplots(2, 1, figsize = (10, 10))

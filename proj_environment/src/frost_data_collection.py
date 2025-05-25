@@ -25,7 +25,7 @@ params = {"sources" : id, "elements" : elements, "referencetime" : time}
 test_params = {"sources" : test_id, "elements" : test_elements, "referencetime" : test_time}
 
 
-def json_file(parameters):
+def json_file(parameters): # Henter data fra API til json fil
     try:
         r = requests.get(url, params = parameters, auth = (key, ""))
         data_file = r.json()
@@ -36,7 +36,7 @@ def json_file(parameters):
         return f"Data kunne ikke hentes: {e}"
 
 
-def understand_structure():
+def understand_structure(): # Hjelpefunksjon til å forstå filstrukturen
     understand = json_file(test_params)
     js = json.dumps(understand, indent = 5)
     key = understand.keys()
@@ -44,7 +44,7 @@ def understand_structure():
     return f"{key}\n{js}"
 
 
-def to_df():
+def to_df(): # Lager en pandas dataframe med json filen
     js_file = json_file(params)
 
     if not isinstance(js_file, dict) or "data" not in js_file:
@@ -97,14 +97,14 @@ def to_df():
     return df  
 
 
-def clean(df):
-    df.dropna(subset=["value"], inplace = True)
+def clean(df): # Renser df, fjerner manglende verdier og erstatter verdiene
+    df.dropna(subset = ["value"], inplace = True)
     df["value"] = df["value"].fillna(df["value"].mean())
 
     return df
 
 
-def analyze(df):
+def analyze(df): # Erstatter id navn med faktisk navn og verdier, med gjennomsnittsverdier
     if not isinstance(df, pd.DataFrame):
         return pd.DataFrame()
 
@@ -123,7 +123,7 @@ def analyze(df):
     return result
 
 
-def final_data():
+def final_data(): # Tar i bruk alle klargjøringsfunksjonene og returnerer en klargjort datafil
     initial_df = to_df()
     
     if initial_df.empty:

@@ -4,7 +4,7 @@ from frost_data_collection import final_data as fd
 from frost_to_json_function import save_to_json as sj
 from frost_data_collection import params as p
 
-def main():
+def main(): # Bruker funksjonen fra frost_to_json_function til å lagre API data til json fil i data mappen
     base_path = os.path.dirname(os.path.abspath(__file__))  
     
     

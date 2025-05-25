@@ -1,7 +1,7 @@
 import json
 import os
 
-def save_to_json(data, filename):
+def save_to_json(data, filename): # Funksjon som skriver fra API til json fil og lagrer det
     try:
         os.makedirs(os.path.dirname(filename), exist_ok = True)
         
