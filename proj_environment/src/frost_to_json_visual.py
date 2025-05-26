@@ -79,7 +79,7 @@ def plot_monthly_average(filepath="../data/final_data.json"):
     except KeyError as e:
         print(f"Mangler forventet kolonne i datasettet: {e}")
     except Exception as e:
-        print(f"Noe gikk galt: {e}")" 
+        print(f"Noe gikk galt: {e}")
 
 # Plotter ukentlig døgnmønster for air-temperature, humidity og wind
 def heatmap_weekday_hour(filepath="../data/final_data.json"):
