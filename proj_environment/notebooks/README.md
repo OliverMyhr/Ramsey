@@ -2,6 +2,8 @@ Describes the notebooks directory
 
 # Kjøring av .py-filer
 
+URL til GIT repo ligger i den overordnede README.md filen
+
 ## Drought
 
 I drought.ipynb kjøres alt av .py-filer for å rense filtered1_data.csv, samt både statistisk og prediktiv analyse av Drought, og diverse visualiseringer.

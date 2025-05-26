@@ -1,6 +1,7 @@
 Explains the source code structure
-
 # .py-filer
+
+URL til GIT repo ligger i den overordnede README.md filen
 
 ## Drought
 

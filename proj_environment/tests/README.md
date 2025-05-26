@@ -1,4 +1,5 @@
 # Unittest
+URL til GIT repo ligger i den overordnede README.md filen
 Vi har valgt å lage unittest på de to viktigste .py-filene, de som tar inn og laster ned en fil. Vi har benyttet MagicMock, for å lage tilsvarende, kortere filer, for mest mulig effektivitet og for å vise en bredere kompetanse. 
 
 ## testdroughtEKTE.py
