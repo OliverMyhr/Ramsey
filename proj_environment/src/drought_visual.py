@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
 
+# Laster ned og pakker ut shapefiles for US counties
 def download_us_county_shapefile(folder="shapefiles"):
     url = "https://www2.census.gov/geo/tiger/GENZ2022/shp/cb_2022_us_county_500k.zip"
     shapefile_path = os.path.join(folder, "cb_2022_us_county_500k.shp")
@@ -23,6 +24,7 @@ def download_us_county_shapefile(folder="shapefiles"):
             z.extractall(folder)
     return shapefile_path
 
+# Statistisk kart over temperatur for gitt dato
 def plot_temperature_map(date: str, csv_path: str = "../data/filtered_temperature_data.csv"):
     df = pd.read_csv(csv_path)
     df_date = df[df["date"] == date]
@@ -49,6 +51,7 @@ def plot_temperature_map(date: str, csv_path: str = "../data/filtered_temperatur
     plt.axis("off")
     plt.show()
 
+# Statistisk kart over nedbør
 def plot_precipitation_map(date: str, csv_path: str = "../data/filtered_precipitation_data.csv"):
     df = pd.read_csv(csv_path)
     df_date = df[df["date"] == date]
@@ -75,6 +78,7 @@ def plot_precipitation_map(date: str, csv_path: str = "../data/filtered_precipit
     plt.axis("off")
     plt.show()
 
+# Interaktivt temperaturkart med hover og zoom
 def plot_interactive_temperature_map(date: str, csv_path: str = "../data/filtered_temperature_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
@@ -113,6 +117,7 @@ def plot_interactive_temperature_map(date: str, csv_path: str = "../data/filtere
                 center={"lat": 37.0902, "lon": -95.7129}, ))
     fig.show()
 
+# Plotter temperatur for en spesifikk fips kode
 def plot_temperature_for_day_and_fips(dato_str, fips_kode, csv_path="../data/filtered_temperature_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
@@ -146,6 +151,7 @@ def plot_temperature_for_day_and_fips(dato_str, fips_kode, csv_path="../data/fil
     plt.tight_layout()
     plt.show()
 
+# Plotter temperatur per år for en fips kode
 def plot_temperature_for_fips(fips_kode, csv_path="../data/filtered_temperature_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
@@ -170,6 +176,7 @@ def plot_temperature_for_fips(fips_kode, csv_path="../data/filtered_temperature_
     plt.tight_layout()
     plt.show()
 
+# Plotter nedbør per år for en fips kode
 def plot_precipitation_for_fips(fips_kode, csv_path="../data/filtered_precipitation_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
@@ -194,6 +201,7 @@ def plot_precipitation_for_fips(fips_kode, csv_path="../data/filtered_precipitat
     plt.tight_layout()
     plt.show()
 
+# Plotter nedbør per måned for ett år
 def plot_monthly_precipitation_for_year(year, csv_path="../data/filtered_precipitation_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
@@ -220,6 +228,7 @@ def plot_monthly_precipitation_for_year(year, csv_path="../data/filtered_precipi
     plt.tight_layout()
     plt.show()
 
+# Plotter nedbør for en måned vist per år
 def plot_yearly_precipitation_for_month(month, csv_path="../data/filtered_precipitation_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
@@ -251,6 +260,7 @@ def plot_yearly_precipitation_for_month(month, csv_path="../data/filtered_precip
     plt.tight_layout()
     plt.show()
 
+# Lager en grid med linjeplot for gjenomsnittstemperatur per måned over år
 def plot_monthly_temp_facets(csv_path="../data/filtered_temperature_data.csv"):
     df = pd.read_csv(csv_path)
     df["date"] = pd.to_datetime(df["date"])
