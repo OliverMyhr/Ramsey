@@ -62,23 +62,23 @@ def color_corr(corr_value): #EN funksjon for definere farge basert på korrelasj
     
     if corr_value <= -0.6:
 
-        return "mørk rød"
+        return "dark red"
     
     elif corr_value <= -0.3:
 
-        return "oransje"
+        return "orange"
     
     elif corr_value <= 0.3:
 
-        return "gul"
+        return "yellow"
     
     elif corr_value <= 0.6:
 
-        return "grønn"
+        return "green"
     
     else:
 
-        return "blå"
+        return "blue"
 
 def visualize_corr(fips_codes, corr_values, var_1, var_2): #Funksjon for å visualisere korrelasjonsverdier med matplotlib
 
@@ -91,7 +91,7 @@ def visualize_corr(fips_codes, corr_values, var_1, var_2): #Funksjon for å visu
         plt.title(f"Korrelasjon mellom {var_1} og {var_2} for hver FIPS kode", fontsize=16) #Tittel
         plt.xlabel("FIPS koder", fontsize=14) #Tittel på x-aksen, og størrelse
         plt.ylabel("Korrelasjonsverdi", fontsize=14) #Tittel på y-aksen, og størrelse
-        plt.axhline(0, color='grønn', linewidth=0.8, linestyle="--") #Legger til horisontal linje på 0 for å skille mellom positive og negative korrelasjonsverdier
+        plt.axhline(0, color='green', linewidth=0.8, linestyle="--") #Legger til horisontal linje på 0 for å skille mellom positive og negative korrelasjonsverdier
 
         for bar, r in zip(bars, corr_values): #Itererer gjennom hver stolpe og korrelasjonsverdi for å legge til tekst på toppen av hver stolpe
 
