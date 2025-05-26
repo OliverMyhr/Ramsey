@@ -18,7 +18,7 @@ Denne filen tilhører oppgave 4, dataanalyse. Her blir korrelasjonsverdier og p-
 
 ### drought_visual.py
 
-Her kan Oliver skrive
+Denne .py-filen visualiserer innholdet i csv-filen, ved hjelp av 10 ulike funksjoner. Den første laster ned og pakker ut US county shapefiles, mens de ni andre visualiserer innholdet på ulike måter. Pågrunn av filens størrelse, har vi konsentrert oss om kun temperatur, og nedbør i denne filen. 
 
 ### droughtEKTE.py
 
@@ -41,3 +41,6 @@ Dette er en funksjon sender data fra API til en json fil.
 
 ### frost_to_json_main.py
 Det er i denne py filen at frost_to_json funksjonen brukes til å sende rådata til en json fil og ferdig behandlet data til en json fil. 
+
+### frost_to_json_visual.py
+Denne filen svarer på oppgave 5, og er tre funksjoner som visualiserer innholdet i json filen. Viulseringene er basert på gjenomsnittsverdier for temperatur, luftfuktighet og vindretning. Den første funksjonen, polar_plot, viser døgnvariasjon for hver målevariabel og stasjon. Den andre, plot_monthly_average, viser hvordan verdiene endrer seg gjennom året. Den siste, heatmap_weekday_hour, visualiserer hvordan verdiene varierer med ukedag og tidspunkt på døgnet. 
