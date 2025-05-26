@@ -35,3 +35,9 @@ Denne csv-filen er en slags modifikasjon av den foregående. Her har drought_cle
 - score: en slags poengsum for å avgjøre brukbarhet (ukentlig)
 
 ## initial_data.json
+
+Rådata
+
+## final_data.json
+
+Ferdig data
